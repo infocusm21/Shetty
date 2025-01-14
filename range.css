@@ -1,6 +1,6 @@
 /* Sticky Price Range Section */
 #price-range {
-  position: sticky;
+  position: auto;
   top: 0;
   background-color: #fff;
   z-index: 10;
@@ -38,6 +38,7 @@
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
+  margin-bottom: 15px; /* Space between property boxes */
 }
 
 .property-box:hover {
@@ -108,11 +109,27 @@
 /* Responsive behavior */
 @media (max-width: 768px) {
   .property-box {
-      flex-wrap: wrap;
+    flex-direction: column; /* Stack images and details vertically on small screens */
   }
+
   .left-side,
   .right-side {
-      flex: 1 1 100%;
-      max-width: 100%;
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  /* Make sure the image is at the top and content at the bottom */
+  .left-side {
+    order: 1; /* Ensure the image comes first (at the top) */
+  }
+
+  .right-side {
+    order: 2; /* Ensure the content comes second (below the image) */
+  }
+
+  #price-range .row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile */
+    gap: 10px; /* Space between boxes */
   }
 }
