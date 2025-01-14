@@ -1,3 +1,33 @@
+/* Sticky Price Range Section */
+#price-range {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 10;
+  padding: 10px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Price Box Styling */
+.price-box {
+  background-color: #007bff;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  text-decoration: none; /* Remove underline */
+}
+
+.price-box:hover {
+  background-color: #0056b3;
+}
+
+/* Container Padding Adjustment for Sticky Section */
+.container {
+  margin-top: 100px; /* To prevent overlap with sticky section */
+}
+
 /* Custom styles for property boxes */
 .property-box {
   display: flex;
