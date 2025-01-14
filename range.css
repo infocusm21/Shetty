@@ -1,6 +1,6 @@
 /* Sticky Price Range Section */
 #price-range {
-  position: auto;
+  position: relative;
   top: 0;
   background-color: #fff;
   z-index: 10;
