@@ -1,0 +1,129 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(219, 232, 241);
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+    gap: 20px;
+}
+.price-box-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.property-box {
+    display: flex;
+    width: 45%;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.left-side {
+    flex: 1;
+    max-width: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+}
+
+.left-side img {
+    width: 100%;
+    max-width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.right-side {
+    flex: 1;
+    padding: 15px;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.title {
+    font-weight: bold;
+    flex: 1;
+}
+
+.value {
+    flex: 2;
+    text-align: left;
+}
+
+button {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+
+
+
+/* Price Range Section */
+#price-range {
+  text-align: center;
+  padding: 1rem;
+}
+
+.price-box-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.price-box {
+  display: inline-block;
+  background: #007bff;
+  color: #fff;
+  padding: 1rem;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  width: 150px;
+  text-align: center;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+
+.price-box:hover {
+  background-color: #0056b3;
+  transform: translateY(-5px);
+}
+
+/* In styles.css */
+body {
+  background-image: url('bgindex.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+

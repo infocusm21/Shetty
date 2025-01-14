@@ -1,0 +1,40 @@
+/* Price Range Section */
+#price-range {
+  text-align: center;
+  padding: 2rem;
+}
+
+.price-box-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.price-box {
+  display: inline-block;
+  background: #007bff;
+  color: #fff;
+  padding: 1.5rem;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  width: 200px;
+  text-align: center;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+
+.price-box:hover {
+  background-color: #0056b3;
+  transform: translateY(-5px);
+}
+
+/* In styles.css */
+body {
+  background-image: url('bgindex.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
