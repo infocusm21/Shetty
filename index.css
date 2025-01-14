@@ -1,18 +1,17 @@
-/* Price Range Section */
-#price-range {
-  text-align: center;
-  padding: 2rem;
+/* Base Styles */
+body {
+  background-image: url('bgindex.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #333;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-.price-box-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
+/* Price Box Styles */
 .price-box {
-  display: inline-block;
   background: #007bff;
   color: #fff;
   padding: 1.5rem;
@@ -20,21 +19,22 @@
   border-radius: 8px;
   font-size: 1.2rem;
   font-weight: bold;
-  width: 200px;
   text-align: center;
-  transition: background-color 0.2s, transform 0.2s;
+  transition: background-color 0.3s, transform 0.3s;
 }
-
 
 .price-box:hover {
   background-color: #0056b3;
   transform: translateY(-5px);
 }
 
-/* In styles.css */
-body {
-  background-image: url('bgindex.jpg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+/* Header */
+header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+/* Footer */
+footer p {
+  margin: 0;
 }
