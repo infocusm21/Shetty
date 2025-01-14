@@ -1,6 +1,6 @@
 /* Sticky Price Range Section */
 #price-range {
-  position: relative;
+  position: sticky;
   top: 0;
   background-color: #fff;
   z-index: 10;
@@ -131,5 +131,10 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile */
     gap: 10px; /* Space between boxes */
+  }
+
+  /* Disable sticky behavior on mobile */
+  #price-range {
+    position: relative; /* Disable sticky positioning on smaller screens */
   }
 }
