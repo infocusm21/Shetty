@@ -1,17 +1,20 @@
-const SHEET_ID = '13CoG6Ljz3TYsn0JImXPcoJqCAgxZnco0Ldnr2lA0Ick'; // Google Sheets ID
-const API_KEY = 'AIzaSyBwnJTt3tZV61gebywzYb8MIDk4CTcleHQ'; // Your API Key
-const range = 'Sheet1!A2:J'; // Updated range for rearranged columns
+// Google Sheets ID and API key
+const SHEET_ID = '13CoG6Ljz3TYsn0JImXPcoJqCAgxZnco0Ldnr2lA0Ick';
+const API_KEY = 'AIzaSyBwnJTt3tZV61gebywzYb8MIDk4CTcleHQ';
+const range = 'Sheet1!A2:J';
 
 // Fetch data from Google Sheets
 async function fetchData() {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
     const response = await fetch(url);
     if (!response.ok) {
+        console.log("Error fetching data from Google Sheets.");
         alert("Error fetching data from Google Sheets.");
         return [];
     }
     const data = await response.json();
-    return data.values;
+    console.log("Fetched data:", data.values); // Log fetched data
+    return data.values || [];
 }
 
 // Format timestamp to "dd-mm-yyyy"
@@ -23,96 +26,154 @@ function formatDate(timestamp) {
     return `${day}-${month}-${year}`;
 }
 
-// Function to open map in Google Maps using the URL from the sheet
-function openMap(mapAddress) {
-    window.open(mapAddress, '_blank'); // Open the map URL in a new tab
-}
-
-// Extract image ID from Google Drive URL and convert to display format
-function getImageId(url) {
-    const regex = /(?:id=)([\w-]+)/;
+// Extract file ID from Google Drive URL and convert to embed preview format
+function getPreviewUrl(url) {
+    const regex = /(?:id=|\/d\/)([\w-]+)/;
     const match = url.match(regex);
     if (match) {
-        const imageId = match[1];
-        return imageId;
+        return `https://drive.google.com/file/d/${match[1]}/preview`;
     }
     return '';
 }
 
-// Display property data in a structured format
+// Extract image ID from Google Drive URL and convert to display format
+function getImageId(url) {
+    const regex = /(?:id=|\/d\/)([\w-]+)/;
+    const match = url.match(regex);
+    if (match) {
+        return match[1];
+    }
+    return '';
+}
+
+// Open a new page to display all images
+function openImagePage(images) {
+    console.log("Opening image page with images:", images);
+    const newWindow = window.open();
+    newWindow.document.write('<html><head><title>Property Images</title></head><body style="font-family: Arial, sans-serif;">');
+    newWindow.document.write('<h1 style="text-align: center; margin-bottom: 20px;">Property Images</h1>');
+    images.forEach((url, index) => {
+        const media = `<img style="width: 100%; margin-bottom: 20px;" src="${url}" alt="Image ${index + 1}">`;
+        newWindow.document.write(`<div>${media}</div>`);
+    });
+    newWindow.document.write('</body></html>');
+    newWindow.document.close();
+}
+
+// Open a new page to display all files (Images and Videos in row 9)
+function openAllFilesPage(files) {
+    console.log("Opening all files page with files:", files);
+    const newWindow = window.open();
+    newWindow.document.write('<html><head><title>All Files</title><style>');
+    newWindow.document.write('body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f7f7f7; }');
+    newWindow.document.write('.grid-container { display: grid; gap: 20px; }');
+    newWindow.document.write('@media (min-width: 768px) { .grid-container { grid-template-columns: repeat(2, 1fr); } }');
+    newWindow.document.write('@media (max-width: 768px) { .grid-container { grid-template-columns: repeat(1, 1fr); } }');
+    newWindow.document.write('iframe { width: 100%; height: 300px; border: none; }');
+    newWindow.document.write('</style></head><body>');
+    newWindow.document.write('<h1 style="text-align: center; margin-bottom: 20px;">All Files</h1>');
+    newWindow.document.write('<div class="grid-container">');
+
+    files.forEach((url) => {
+        const previewUrl = getPreviewUrl(url);
+        if (previewUrl) {
+            newWindow.document.write(`<iframe src="${previewUrl}"></iframe>`);
+        }
+    });
+
+    newWindow.document.write('</div></body></html>');
+    newWindow.document.close();
+}
+
+// Display property data
 function displayProperties(data) {
-    const container = document.getElementById('container');
-    
-    // Clear the container before appending new content
+    const container = document.getElementById("container");
     container.innerHTML = "";
 
-    // Filter rows by "50 L to 1 Crore" price range and sort by latest timestamp
-    const filteredData = data
-        .filter(row => row[6] && row[6].includes('Layout'))
-        .sort((a, b) => new Date(b[0]) - new Date(a[0])); // Sort by timestamp (latest first)
+    // Filter rows by "50 L to 1 Crore" price range
+    const filteredData = data.filter(row => row[6] && row[6].includes('Layout'));
+    console.log("Filtered data for '50 L to 1 Crore':", filteredData);
 
-    // Create boxes for each row
+    if (filteredData.length === 0) {
+        container.innerHTML = '<div class="text-center">No properties available or end of the page.</div>';
+        return;
+    }
+
     filteredData.forEach(row => {
-        const imageUrls = row[9] ? row[9].split(',').map(url => `https://lh3.googleusercontent.com/d/${getImageId(url)}`) : [];
+        const imageUrls = row[9] ? row[9].split(",").map(url => `https://lh3.googleusercontent.com/d/${getImageId(url)}`) : [];
+        const fileUrls = row[9] ? row[9].split(",").map(url => url.trim()) : [];
+
         const propertyDetails = {
-            timestamp: formatDate(row[0]),
             propertyName: row[1],
-            brokerName: row[2],
-            brokerPhone: row[3],
+            price: row[7],
             address: row[4],
-            mapAddress: row[5],
-            priceOfSite: row[7],
             siteDetails: row[8],
+            brokerName: row[2],
+            mapAddress: row[5],
+            images: imageUrls,
+            files: fileUrls
         };
 
-        // Create property box
-        const propertyBox = document.createElement('div');
-        propertyBox.classList.add('property-box');
+        console.log("Rendering property:", propertyDetails);
 
-        // Left side (slideshow for images)
-        const leftSide = document.createElement('div');
-        leftSide.classList.add('left-side');
-        const img = document.createElement('img');
-        if (imageUrls.length > 0) img.src = imageUrls[0];
-        leftSide.appendChild(img);
+        const propertyBox = document.createElement("div");
+        propertyBox.classList.add("property-box", "col-12");
 
-        // Set up slideshow for images
         let currentImageIndex = 0;
-        if (imageUrls.length > 0) {
+        const imageElement = document.createElement("img");
+        imageElement.src = imageUrls[0];
+        imageElement.style.pointerEvents = "none"; // Prevent pointer interactions
+        if (imageUrls.length > 1) {
             setInterval(() => {
                 currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
-                img.src = imageUrls[currentImageIndex];
-            }, 3000); // Change image every 3 seconds
+                imageElement.src = imageUrls[currentImageIndex];
+            }, 3000); // Auto-slide every 3 seconds
         }
-
-        // Right side (details with left column titles and right column values)
-        const rightSide = document.createElement('div');
-        rightSide.classList.add('right-side');
-        rightSide.innerHTML = `
-            <div class="detail-row"><span class="title">Property Name:</span> <span class="value">${propertyDetails.propertyName}</span></div>
-            <div class="detail-row"><span class="title">Price of Site:</span> <span class="value">${propertyDetails.priceOfSite}</span></div>
-            <div class="detail-row"><span class="title">Address:</span> <span class="value">${propertyDetails.address}</span></div>
-            <div class="detail-row"><span class="title">Site Details:</span> <span class="value">${propertyDetails.siteDetails}</span></div>
-            <div class="detail-row"><span class="title">Broker Name:</span> <span class="value">${propertyDetails.brokerName}</span></div>
-            <div class="detail-row"><span class="title">Broker Phone:</span> <span class="value">${propertyDetails.brokerPhone}</span></div>
-            <div class="detail-row">
-                <span class="title">Map Address:</span>
-                <span class="value">
-                    <button class="btn btn-primary glow-button" onclick="openMap('${propertyDetails.mapAddress}')">Open in Google Maps</button>
-                </span>
+// <div class="detail-row"><span class="title">Site Details:</span><span class="value">${propertyDetails.siteDetails}</span></div>
+        propertyBox.innerHTML = `
+            <div class="left-side"></div>
+            <div class="right-side">
+                <h1 style="font-weight: bold; font-size: 35px;">${propertyDetails.propertyName}</h1>                
+                <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 20px;">Price :</span><span class="value" style="font-weight: bold; font-size: 30px;">${propertyDetails.price}</span></div>
+                <div class="detail-row"><span class="title">Address:</span><span class="value">${propertyDetails.address}</span></div>
+                <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 15px;">Site Details:</span><span class="value" style="font-weight: normal; font-size: 22px;">${propertyDetails.siteDetails}</span></div>
+                <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 15px;">Broker Name:</span><span class="value" style="font-weight: normal; font-size: 15px;">${propertyDetails.brokerName}</span></div>
+                <div class="detail-row"><span class="title"><br>Contact:</br></span><span class="value"><br>Nagaraja Sheety </br>63621 87521</span></div>
+                ${propertyDetails.mapAddress ? `<div class="detail-row">
+                    <a href="${propertyDetails.mapAddress}" target="_blank" class="btn btn-primary glow-button">View on Map</a>
+                </div>` : ""}
+                <div class="detail-row">
+                    <button class="btn btn-info" onclick='openImagePage(${JSON.stringify(imageUrls)})'>View Photos</button>
+                </div>
+                <div class="detail-row">
+                    <button class="btn btn-secondary" onclick='openAllFilesPage(${JSON.stringify(fileUrls)})'>View All Files</button>
+                </div>
+                <div class="detail-row">
+                    <button class="btn btn-success" onclick='shareProperty(${JSON.stringify(propertyDetails)})'>Share</button>
+                </div>
             </div>
         `;
 
-        // Append left and right sides to property box
-        propertyBox.appendChild(leftSide);
-        propertyBox.appendChild(rightSide);
-
-        // Append property box to container
+        propertyBox.querySelector(".left-side").appendChild(imageElement);
         container.appendChild(propertyBox);
     });
 }
 
-// Initialize the fetching and rendering process
-fetchData().then(data => {
-    displayProperties(data);
-});
+// Share property data
+function shareProperty(details) {
+    const shareData = {
+        title: "Property Details",
+        text: `Property Name: ${details.propertyName}\nPrice: ${details.price}\nAddress: ${details.address}\nSite Details: ${details.siteDetails}\nBroker Name: ${details.brokerName}\nImages: ${details.images.join(", ")}\n${details.mapAddress ? `View Map: ${details.mapAddress}` : ""}`,
+        url: window.location.href
+    };
+
+    if (navigator.share) {
+        navigator.share(shareData).catch(err => console.error("Error sharing", err));
+    } else {
+        console.log("Sharing is not supported on this browser.");
+        alert("Sharing is not supported on this browser.");
+    }
+}
+
+// Initialize
+fetchData().then(data => displayProperties(data));
