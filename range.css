@@ -58,7 +58,7 @@
     .property-box {
         flex-direction: column;
     }
-
+    
     .left-side {
         order: -1; /* Image goes to the top */
         width: 100%;

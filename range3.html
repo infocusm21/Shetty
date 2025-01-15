@@ -73,7 +73,7 @@
             }
         }
 
-        /* Price Range Section Styling */
+        /* Price Range Section Styling 
         #price-range {
             background-color: #f9f9f9;
             padding: 20px;
@@ -93,7 +93,43 @@
 
         .price-box:hover {
             background-color: #0056b3;
-        }
+        } */
+         /* Price Range Section Styling */
+#price-range {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.price-box {
+    text-decoration: none;
+    color: #fff;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    background-color: #007bff;
+    transition: background-color 0.3s ease;
+}
+
+.price-box:hover {
+    background-color: #0056b3;
+}
+
+/* Mobile View (4x4 Grid for Price Boxes) */
+@media (max-width: 768px) {
+    #price-range .row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 4 columns in mobile view */
+        gap: -2px; /* Space between boxes */
+    }
+
+    .price-box {
+        font-size: 12px; /* Adjust font size for better fit in smaller boxes */
+        padding: 10px; /* Adjust padding to ensure better spacing */
+    }
+}
+
     </style>
 </head>
 <body>
