@@ -3,11 +3,11 @@
     display: flex;
     flex-direction: row;
     margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border: 1px solid #1a6cde;
+    border-radius: 40px;
     overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(17, 200, 121, 0.1);
+    background-color: #f7f8fa;
 }
 
 /* Left Side (Image Area) */
@@ -86,7 +86,7 @@
     text-align: center;
     border: none;
     border-radius: 5px;
-    box-shadow: 0 0 10px #007bff, 0 0 20px #007bff;
+    box-shadow: 0 0 10px #4f8fd3, 0 0 20px #dae8f7;
     transition: all 0.3s ease-in-out;
     cursor: pointer;
 }
@@ -113,7 +113,7 @@
 /* Additional Styles for Consistency */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
+    background-color: #faf9f9;
     margin: 0;
     padding: 0;
 }
