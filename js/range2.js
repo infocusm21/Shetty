@@ -50,6 +50,30 @@ function openImagePage(images) {
     newWindow.document.close();
 }
 
+// Open a new page to display all videos
+function openVideoPage(videos) {
+    const newWindow = window.open();
+    newWindow.document.write('<html><head><title>Property Videos</title></head><body style="font-family: Arial, sans-serif;">');
+    newWindow.document.write('<h1 style="text-align: center; margin-bottom: 20px;">Property Videos</h1>');
+    videos.forEach((url, index) => {
+        newWindow.document.write(`<div><video controls style="width: 100%; margin-bottom: 20px;" src="${url}"></video></div>`);
+    });
+    newWindow.document.write('</body></html>');
+    newWindow.document.close();
+}
+
+// Open a new page to display all PDFs
+function openPDFPage(pdfs) {
+    const newWindow = window.open();
+    newWindow.document.write('<html><head><title>Property PDFs</title></head><body style="font-family: Arial, sans-serif;">');
+    newWindow.document.write('<h1 style="text-align: center; margin-bottom: 20px;">Property PDFs</h1>');
+    pdfs.forEach((url, index) => {
+        newWindow.document.write(`<div><iframe src="${url}" style="width: 100%; height: 600px; margin-bottom: 20px;"></iframe></div>`);
+    });
+    newWindow.document.write('</body></html>');
+    newWindow.document.close();
+}
+
 // Display property data
 function displayProperties(data) {
     const container = document.getElementById("container");
@@ -65,6 +89,9 @@ function displayProperties(data) {
 
     filteredData.forEach(row => {
         const imageUrls = row[9] ? row[9].split(",").map(url => `https://lh3.googleusercontent.com/d/${getImageId(url)}`) : [];
+        const videoUrls = row[10] ? row[10].split(",").map(url => url.trim()) : []; // Assuming column 10 for video URLs
+        const pdfUrls = row[11] ? row[11].split(",").map(url => url.trim()) : []; // Assuming column 11 for PDF URLs
+
         const propertyDetails = {
             propertyName: row[1],
             price: row[7],
@@ -72,7 +99,9 @@ function displayProperties(data) {
             siteDetails: row[8],
             brokerName: row[2],
             mapAddress: row[5],
-            images: imageUrls
+            images: imageUrls,
+            videos: videoUrls,
+            pdfs: pdfUrls
         };
 
         const propertyBox = document.createElement("div");
@@ -87,6 +116,18 @@ function displayProperties(data) {
                 currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
                 imageElement.src = imageUrls[currentImageIndex];
             }, 3000); // Auto-slide every 3 seconds
+        }
+
+        // Build the buttons based on the presence of videos and PDFs
+        let videoButton = '';
+        let pdfButton = '';
+
+        if (videoUrls.length > 0) {
+            videoButton = `<button class="btn btn-warning" onclick='openVideoPage(${JSON.stringify(videoUrls)})'>View Video</button>`;
+        }
+
+        if (pdfUrls.length > 0) {
+            pdfButton = `<button class="btn btn-danger" onclick='openPDFPage(${JSON.stringify(pdfUrls)})'>View PDF</button>`;
         }
 
         propertyBox.innerHTML = `
@@ -104,6 +145,8 @@ function displayProperties(data) {
                 <div class="detail-row">
                     <button class="btn btn-info" onclick='openImagePage(${JSON.stringify(imageUrls)})'>View Photos</button>
                 </div>
+                ${videoButton ? `<div class="detail-row">${videoButton}</div>` : ''}
+                ${pdfButton ? `<div class="detail-row">${pdfButton}</div>` : ''}
                 <div class="detail-row">
                     <button class="btn btn-success" onclick='shareProperty(${JSON.stringify(propertyDetails)})'>Share</button>
                 </div>
