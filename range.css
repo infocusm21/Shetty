@@ -1,140 +1,132 @@
-/* Sticky Price Range Section */
-#price-range {
-  position: sticky;
-  top: 0;
-  background-color: #fff;
-  z-index: 10;
-  padding: 10px 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Price Box Styling */
-.price-box {
-  background-color: #007bff;
-  color: #fff;
-  padding: 15px;
-  text-align: center;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-  text-decoration: none; /* Remove underline */
-}
-
-.price-box:hover {
-  background-color: #0056b3;
-}
-
-/* Container Padding Adjustment for Sticky Section */
-.container {
-  margin-top: 100px; /* To prevent overlap with sticky section */
-}
-
-/* Custom styles for property boxes */
+/* General Layout for Property Boxes */
 .property-box {
-  display: flex;
-  flex-wrap: wrap;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-  margin-bottom: 15px; /* Space between property boxes */
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
 }
 
-.property-box:hover {
-  transform: translateY(-5px);
-}
-
-/* Left side (Image section) */
+/* Left Side (Image Area) */
 .left-side {
-  flex: 1 1 40%;
-  max-width: 40%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f8f9fa;
-  padding: 10px;
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
 }
 
 .left-side img {
-  width: auto;
-  height: auto;
-  object-fit: stretch;
-  border-radius: 8px;
-}
-
-/* Right side (Details section) */
-.right-side {
-  flex: 1 1 60%;
-  max-width: 60%;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.detail-row .title {
-  font-weight: 600;
-  color: #333;
-}
-
-.detail-row .value {
-  font-weight: 400;
-  color: #555;
-}
-
-.right-side button {
-  margin-top: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 12px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.right-side button:hover {
-  background-color: #0056b3;
-}
-
-/* Responsive behavior */
-@media (max-width: 768px) {
-  .property-box {
-    flex-direction: column; /* Stack images and details vertically on small screens */
-  }
-
-  .left-side,
-  .right-side {
-    flex: 1 1 100%;
     max-width: 100%;
-  }
+    height: auto;
+    border-radius: 8px;
+}
 
-  /* Make sure the image is at the top and content at the bottom */
-  .left-side {
-    order: 1; /* Ensure the image comes first (at the top) */
-  }
+/* Right Side (Details Area) */
+.right-side {
+    flex: 2;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-  .right-side {
-    order: 2; /* Ensure the content comes second (below the image) */
-  }
+.right-side .detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
 
-  #price-range .row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile */
-    gap: 10px; /* Space between boxes */
-  }
+.right-side .title {
+    font-weight: bold;
+    color: #333;
+    flex: 1 0 150px;
+}
 
-  /* Disable sticky behavior on mobile */
-  #price-range {
-    position: relative; /* Disable sticky positioning on smaller screens */
-  }
+.right-side .value {
+    color: #555;
+    flex: 2 0 calc(100% - 150px);
+    word-break: break-word;
+}
+
+/* Mobile Layout (Image on Top, Details Below) */
+@media (max-width: 768px) {
+    .property-box {
+        flex-direction: column;
+    }
+
+    .left-side {
+        order: -1; /* Image goes to the top */
+        width: 100%;
+    }
+
+    .right-side {
+        width: 100%;
+    }
+
+    .left-side img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 15px; /* Space between image and data */
+    }
+}
+
+/* Glowing Button (Map Address Button) */
+.glow-button {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #007bff, 0 0 20px #007bff;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.glow-button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 0 15px #0056b3, 0 0 25px #0056b3;
+    transform: scale(1.05);
+}
+
+/* Styling for Container */
+#container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Utility for Center Alignment */
+.text-center {
+    text-align: center;
+}
+
+/* Additional Styles for Consistency */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-top: 40px;
+    margin-bottom: 20px;
 }

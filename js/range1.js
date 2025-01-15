@@ -6,8 +6,11 @@ const range = 'Sheet1!A2:J'; // Updated range for rearranged columns
 async function fetchData() {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
     const response = await fetch(url);
+    if (!response.ok) {
+        alert("Error fetching data from Google Sheets.");
+        return [];
+    }
     const data = await response.json();
-
     return data.values;
 }
 
@@ -25,18 +28,32 @@ function openMap(mapAddress) {
     window.open(mapAddress, '_blank'); // Open the map URL in a new tab
 }
 
+// Extract image ID from Google Drive URL and convert to display format
+function getImageId(url) {
+    const regex = /(?:id=)([\w-]+)/;
+    const match = url.match(regex);
+    if (match) {
+        const imageId = match[1];
+        return imageId;
+    }
+    return '';
+}
+
 // Display property data in a structured format
 function displayProperties(data) {
     const container = document.getElementById('container');
+    
+    // Clear the container before appending new content
+    container.innerHTML = "";
 
     // Filter rows by "50 L to 1 Crore" price range and sort by latest timestamp
     const filteredData = data
-        .filter(row => row[6] && row[6].includes('50 L to  1 Crore'))
+        .filter(row => row[6] && row[6].includes('10 to 50 Lakh'))
         .sort((a, b) => new Date(b[0]) - new Date(a[0])); // Sort by timestamp (latest first)
 
     // Create boxes for each row
     filteredData.forEach(row => {
-        const imageUrls = row[9] ? row[9].split(',').map(url => `https://drive.google.com/thumbnail?id=${getImageId(url)}&export=download&format=webp`) : [];
+        const imageUrls = row[9] ? row[9].split(',').map(url => `https://lh3.googleusercontent.com/d/${getImageId(url)}`) : [];
         const propertyDetails = {
             timestamp: formatDate(row[0]),
             propertyName: row[1],
@@ -61,12 +78,12 @@ function displayProperties(data) {
 
         // Set up slideshow for images
         let currentImageIndex = 0;
-        setInterval(() => {
-            if (imageUrls.length > 0) {
+        if (imageUrls.length > 0) {
+            setInterval(() => {
                 currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
                 img.src = imageUrls[currentImageIndex];
-            }
-        }, 3000); // Change image every 3 seconds
+            }, 3000); // Change image every 3 seconds
+        }
 
         // Right side (details with left column titles and right column values)
         const rightSide = document.createElement('div');
@@ -81,7 +98,7 @@ function displayProperties(data) {
             <div class="detail-row">
                 <span class="title">Map Address:</span>
                 <span class="value">
-                    <button onclick="openMap('${propertyDetails.mapAddress}')">Open in Google Maps</button>
+                    <button class="btn btn-primary glow-button" onclick="openMap('${propertyDetails.mapAddress}')">Open in Google Maps</button>
                 </span>
             </div>
         `;
@@ -95,18 +112,7 @@ function displayProperties(data) {
     });
 }
 
-// Extract image ID from Google Drive URL and convert to .webp
-function getImageId(url) {
-    const regex = /(?:id=)([\w-]+)/;
-    const match = url.match(regex);
-    if (match) {
-        const imageId = match[1];
-        return imageId;
-    }
-    return '';
-}
-
-// Initialize
+// Initialize the fetching and rendering process
 fetchData().then(data => {
     displayProperties(data);
 });

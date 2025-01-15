@@ -48,7 +48,7 @@ function displayProperties(data) {
 
     // Filter rows by "50 L to 1 Crore" price range and sort by latest timestamp
     const filteredData = data
-        .filter(row => row[6] && row[6].includes('Layout'))
+        .filter(row => row[6] && row[6].includes('Factory/Sheds'))
         .sort((a, b) => new Date(b[0]) - new Date(a[0])); // Sort by timestamp (latest first)
 
     // Create boxes for each row
