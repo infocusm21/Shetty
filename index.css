@@ -38,3 +38,22 @@ header h1 {
 footer p {
   margin: 0;
 }
+
+/* Responsive Grid for Price Range Boxes */
+@media (min-width: 992px) { /* Large screens (Desktop) */
+  .col-lg-3 {
+    flex: 0 0 25%; /* 4 columns in desktop view */
+  }
+}
+
+@media (max-width: 991px) { /* Medium screens (Tablets) */
+  .col-md-3 {
+    flex: 0 0 33.33333%; /* 3 columns in tablet view */
+  }
+}
+
+@media (max-width: 576px) { /* Small screens (Mobile) */
+  .col-6 {
+    flex: 0 0 50%; /* 2 columns in mobile view */
+  }
+}
