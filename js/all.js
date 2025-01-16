@@ -162,11 +162,11 @@ function displayProperties(data) {
     });
 }
 
-// Share property data
+// Share property data details.images.join("\n\n")
 function shareProperty(details) {
     const shareData = {
         title: "Property Details",
-        text: `Property Name:   ${details.propertyName}\nPrice:                     ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${details.images.join("\n\n")}\n\n`,
+        text: `Property Name:  ${details.propertyName}\nPrice:                     ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${JSON.stringify(imageUrls)}\n\n`, 
         url: window.location.href
     };
 
