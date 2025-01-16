@@ -2,7 +2,6 @@
 const SHEET_ID = '13CoG6Ljz3TYsn0JImXPcoJqCAgxZnco0Ldnr2lA0Ick';
 const API_KEY = 'AIzaSyBwnJTt3tZV61gebywzYb8MIDk4CTcleHQ';
 const range = 'Sheet1!A2:J';
-const range2 = 'Sheet2!A2:C';
 
 // Fetch data from Google Sheets with sorting based on timestamp in column 0
 async function fetchData() {
@@ -163,60 +162,14 @@ function displayProperties(data) {
     });
 }
 
-// Function to fetch image URLs and generate short URLs
-async function fetchImageUrls() {
-    const SHEET_ID = '13CoG6Ljz3TYsn0JImXPcoJqCAgxZnco0Ldnr2lA0Ick';
-    const API_KEY = 'AIzaSyBwnJTt3tZV61gebywzYb8MIDk4CTcleHQ';
-    const range1 = 'Sheet1!A2:J'; // Range for the property data
-
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range1}?key=${API_KEY}`;
-    const response = await fetch(url);
-    const data = await response.json();
-
-    const images = data.values.map(row => row[9]); // Assuming the images are in column J
-
-    // Generate short URLs for each image using a short URL service
-    const shortUrls = await Promise.all(images.map(async (imageUrl) => {
-        const shortUrl = await generateShortUrl(imageUrl);
-        return shortUrl;
-    }));
-
-    return shortUrls;
-}
-
-// Function to generate short URL (using Google URL shortener or similar)
-async function generateShortUrl(url) {
-    const shortenerUrl = `https://api-ssl.bitly.com/v4/shorten`;
-    const accessToken = 'YOUR_BITLY_ACCESS_TOKEN'; // Replace with your Bitly API token
-
-    const response = await fetch(shortenerUrl, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            long_url: url
-        })
-    });
-
-    const data = await response.json();
-    return data.link;
-}
-
-// Function to share property details
-async function shareProperty(details) {
-    // Fetch short URLs for the images
-    const shortUrls = await fetchImageUrls();
-
-    // Prepare the data to be shared
+// Share property data details.images.join("\n\n")   
+function shareProperty(details) {
     const shareData = {
         title: "Property Details",
-        text: `Property Name:  ${details.propertyName}\nPrice:                     ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${shortUrls.join("\n\n")}\n\n`, 
+        text: `Property Name:  ${details.propertyName}\nPrice:                     ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${details.images.join("\n\n")}\n\n`, 
         url: window.location.href
     };
 
-    // Share using the Web Share API
     if (navigator.share) {
         navigator.share(shareData).catch(err => console.error("Error sharing", err));
     } else {
@@ -224,7 +177,6 @@ async function shareProperty(details) {
         alert("Sharing is not supported on this browser.");
     }
 }
-
 
 // Initialize
 fetchData().then(data => displayProperties(data));
