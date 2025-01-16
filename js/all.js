@@ -117,8 +117,6 @@ function displayProperties(data) {
             price: row[7],
             address: row[4],
             siteDetails: row[8],
-            brokerName: row[2],
-            mapAddress: row[5],
             images: imageUrls,
             files: fileUrls
         };
@@ -146,12 +144,8 @@ function displayProperties(data) {
                 <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 20px;">Price :</span><span class="value" style="font-weight: bold; font-size: 30px;">${propertyDetails.price}</span></div>
                 <div class="detail-row"><span class="title">Address:</span><span class="value">${propertyDetails.address}</span></div>
                 <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 15px;">Site Details:</span><span class="value" style="font-weight: normal; font-size: 22px;">${propertyDetails.siteDetails}</span></div>
-                <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 15px;">Broker Name:</span><span class="value" style="font-weight: normal; font-size: 15px;">${propertyDetails.brokerName}</span></div>
                 <div class="detail-row"><span class="title"><br>Contact:</br></span><span class="value"><br>Nagaraja Sheety </br>63621 87521</span></div>
-                ${propertyDetails.mapAddress ? `<div class="detail-row">
-                    <a href="${propertyDetails.mapAddress}" target="_blank" class="btn btn-primary glow-button">View on Map</a>
-                </div>` : ""}
-                <div class="detail-row">
+                               <div class="detail-row">
                     <button class="btn btn-info" onclick='openImagePage(${JSON.stringify(imageUrls)})'>View Photos</button>
                 </div>
                 <div class="detail-row">
@@ -172,7 +166,7 @@ function displayProperties(data) {
 function shareProperty(details) {
     const shareData = {
         title: "Property Details",
-        text: `Property Name:   ${details.propertyName}\nPrice:                     ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nBroker Name:          ${details.brokerName}\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${details.images.join("\n\n")}\n\n${details.mapAddress ? `View Map: ${details.mapAddress}\n` : ""}`,
+        text: `Property Name:   ${details.propertyName}\nPrice:                     ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${details.images.join("\n\n")}\n\n`,
         url: window.location.href
     };
 
