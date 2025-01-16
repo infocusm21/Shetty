@@ -166,8 +166,8 @@ function displayProperties(data) {
 function shareProperty(details) {
     const shareData = {
         title: "Property Details",
-        text: `Property Name:   ${details.propertyName}\n\nPrice:   ${details.price}\n\nAddress:   ${details.address}\nSite Details: \n ${details.siteDetails}\nBroker Name: \n ${details.brokerName}\nContact: Nagaraja Sheety, 63621 87521\nImages: \n${details.images.join(",")}\n`,
-        url: details.mapAddress
+        text: `Property Name:   ${details.propertyName}\n\n Price:   ${details.price}\n\n Address:   ${details.address}\n\n Site Details:   ${details.siteDetails}\n\n Broker Name:   ${details.brokerName}\n\n Contact:   Nagaraja Sheety, 63621 87521\n\n Images: ${details.images.join(", ")}\n${details.mapAddress ? `View Map: ${details.mapAddress}` : ""}`,
+        url: window.location.href
     };
 
     navigator.share ? navigator.share(shareData).then(() => console.log("Property shared successfully.")).catch(error => console.log("Sharing failed:", error)) : alert("Sharing not supported in this browser.");
