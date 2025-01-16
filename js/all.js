@@ -172,7 +172,7 @@ function displayProperties(data) {
 function shareProperty(details) {
     const shareData = {
         title: "Property Details",
-        text: `Property Name:   ${details.propertyName}\nPrice:                    ${details.price}\nAddress:               ${details.address}\nSite Details:           ${details.siteDetails}\nBroker Name:          ${details.brokerName}\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${details.images.join("\n\n")}\n${details.mapAddress ? `View Map: ${details.mapAddress}` : ""}`,
+        text: `Property Name:   ${details.propertyName}\nPrice:                     ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nBroker Name:          ${details.brokerName}\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${details.images.join("\n\n")}\n\n${details.mapAddress ? `View Map: ${details.mapAddress}\n` : ""}`,
         url: window.location.href
     };
 
