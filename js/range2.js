@@ -3,7 +3,7 @@ const SHEET_ID = '13CoG6Ljz3TYsn0JImXPcoJqCAgxZnco0Ldnr2lA0Ick';
 const API_KEY = 'AIzaSyBwnJTt3tZV61gebywzYb8MIDk4CTcleHQ';
 const range = 'Sheet1!A2:J';
 
-// Fetch data from Google Sheets with sorting based on timestamp in column 0
+// Fetch data from Google Sheets
 async function fetchData() {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
     const response = await fetch(url);
@@ -13,17 +13,8 @@ async function fetchData() {
         return [];
     }
     const data = await response.json();
-    const rows = data.values || [];
-
-    // Sort data based on the timestamp in the first column (index 0)
-    rows.sort((a, b) => {
-        const timestampA = new Date(a[0]);
-        const timestampB = new Date(b[0]);
-        return timestampB - timestampA;  // Sort in descending order (latest first)
-    });
-
-    console.log("Fetched and sorted data:", rows); // Log sorted data
-    return rows;
+    console.log("Fetched data:", data.values); // Log fetched data
+    return data.values || [];
 }
 
 // Format timestamp to "dd-mm-yyyy"
@@ -99,9 +90,12 @@ function displayProperties(data) {
     const container = document.getElementById("container");
     container.innerHTML = "";
 
-    // Use the entire dataset
-    const filteredData = data; // No filtering, just show all properties
-    console.log("Fetched all properties:", filteredData);
+    // Sort rows by latest timestamp (assuming timestamp is in row[0])
+    const sortedData = data.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+
+    // Filter rows by "50 L to 1 Crore" price range
+    const filteredData = sortedData.filter(row => row[6] && row[6].includes('1 to 2 Crore'));
+    console.log("Filtered data for '50 L to 1 Crore':", filteredData);
 
     if (filteredData.length === 0) {
         container.innerHTML = '<div class="text-center">No properties available or end of the page.</div>';
@@ -117,6 +111,7 @@ function displayProperties(data) {
             price: row[7],
             address: row[4],
             siteDetails: row[8],
+            
             images: imageUrls,
             files: fileUrls
         };
@@ -144,8 +139,10 @@ function displayProperties(data) {
                 <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 20px;">Price :</span><span class="value" style="font-weight: bold; font-size: 30px;">${propertyDetails.price}</span></div>
                 <div class="detail-row"><span class="title">Address:</span><span class="value">${propertyDetails.address}</span></div>
                 <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 15px;">Site Details:</span><span class="value" style="font-weight: normal; font-size: 22px;">${propertyDetails.siteDetails}</span></div>
-                <div class="detail-row"><span class="title"><br>Contact:</br></span><span class="value"><br>Nagaraja Sheety </br>63621 87521</span></div>
-                               <div class="detail-row">
+                
+                <div class="detail-row"><span class="title"><br>Contact:</br></span><span class="value"><br>Nagaraja Shetty </br>63621 87521</span></div>
+                
+                <div class="detail-row">
                     <button class="btn btn-info" onclick='openImagePage(${JSON.stringify(imageUrls)})'>View Photos</button>
                 </div>
                 <div class="detail-row">
@@ -162,23 +159,21 @@ function displayProperties(data) {
     });
 }
 
+// Share property data
 function shareProperty(details) {
-    const imagePageUrl = "https://infocusm21.github.io/Shetty/view.html";
-
     const shareData = {
         title: "Property Details",
-        text: `Property Name:  ${details.propertyName}\nPrice:                     ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: ${imagePageUrl}\n\n`, 
+        text: `Property Name:   ${details.propertyName}\nPrice:                    ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${details.images.join("\n\n ")}\n\n${details.mapAddress ? `View Map: ${details.mapAddress}\n` : ""}`,
         url: window.location.href
     };
 
-    if (navigator.share) {
-        navigator.share(shareData).catch(err => console.error("Error sharing", err));
-    } else {
-        console.log("Sharing is not supported on this browser.");
-        alert("Sharing is not supported on this browser.");
-    }
+    navigator.share ? navigator.share(shareData).then(() => console.log("Property shared successfully.")).catch(error => console.log("Sharing failed:", error)) : alert("Sharing not supported in this browser.");
 }
 
+// Initialize app
+async function init() {
+    const data = await fetchData();
+    displayProperties(data);
+}
 
-// Initialize
-fetchData().then(data => displayProperties(data));
+init();
