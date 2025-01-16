@@ -90,8 +90,11 @@ function displayProperties(data) {
     const container = document.getElementById("container");
     container.innerHTML = "";
 
+    // Sort rows by latest timestamp (assuming timestamp is in row[0])
+    const sortedData = data.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+
     // Filter rows by "50 L to 1 Crore" price range
-    const filteredData = data.filter(row => row[6] && row[6].includes('10 to 50 Lakh'));
+    const filteredData = sortedData.filter(row => row[6] && row[6].includes('10 to 50 Lakh'));
     console.log("Filtered data for '50 L to 1 Crore':", filteredData);
 
     if (filteredData.length === 0) {
@@ -129,7 +132,7 @@ function displayProperties(data) {
                 imageElement.src = imageUrls[currentImageIndex];
             }, 3000); // Auto-slide every 3 seconds
         }
-// <div class="detail-row"><span class="title">Site Details:</span><span class="value">${propertyDetails.siteDetails}</span></div>
+
         propertyBox.innerHTML = `
             <div class="left-side"></div>
             <div class="right-side">
@@ -138,7 +141,7 @@ function displayProperties(data) {
                 <div class="detail-row"><span class="title">Address:</span><span class="value">${propertyDetails.address}</span></div>
                 <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 15px;">Site Details:</span><span class="value" style="font-weight: normal; font-size: 22px;">${propertyDetails.siteDetails}</span></div>
                 <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 15px;">Broker Name:</span><span class="value" style="font-weight: normal; font-size: 15px;">${propertyDetails.brokerName}</span></div>
-                <div class="detail-row"><span class="title"><br>Contact:</br></span><span class="value"><br>Nagaraja Sheety </br>63621 87521</span></div>
+                <div class="detail-row"><span class="title"><br>Contact:</br></span><span class="value"><br>Nagaraja Shetty </br>63621 87521</span></div>
                 ${propertyDetails.mapAddress ? `<div class="detail-row">
                     <a href="${propertyDetails.mapAddress}" target="_blank" class="btn btn-primary glow-button">View on Map</a>
                 </div>` : ""}
@@ -163,17 +166,17 @@ function displayProperties(data) {
 function shareProperty(details) {
     const shareData = {
         title: "Property Details",
-        text: `Property Name: ${details.propertyName}\nPrice: ${details.price}\nAddress: ${details.address}\nSite Details: ${details.siteDetails}\nBroker Name: ${details.brokerName}\nImages: ${details.images.join(", ")}\n${details.mapAddress ? `View Map: ${details.mapAddress}` : ""}`,
+        text: `Property Name:   ${details.propertyName}\nPrice:                    ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nBroker Name:          ${details.brokerName}\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${details.images.join("\n\n ")}\n\n${details.mapAddress ? `View Map: ${details.mapAddress}\n` : ""}`,
         url: window.location.href
     };
 
-    if (navigator.share) {
-        navigator.share(shareData).catch(err => console.error("Error sharing", err));
-    } else {
-        console.log("Sharing is not supported on this browser.");
-        alert("Sharing is not supported on this browser.");
-    }
+    navigator.share ? navigator.share(shareData).then(() => console.log("Property shared successfully.")).catch(error => console.log("Sharing failed:", error)) : alert("Sharing not supported in this browser.");
 }
 
-// Initialize
-fetchData().then(data => displayProperties(data));
+// Initialize app
+async function init() {
+    const data = await fetchData();
+    displayProperties(data);
+}
+
+init();

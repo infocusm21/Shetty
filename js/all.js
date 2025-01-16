@@ -3,7 +3,7 @@ const SHEET_ID = '13CoG6Ljz3TYsn0JImXPcoJqCAgxZnco0Ldnr2lA0Ick';
 const API_KEY = 'AIzaSyBwnJTt3tZV61gebywzYb8MIDk4CTcleHQ';
 const range = 'Sheet1!A2:J';
 
-// Fetch data from Google Sheets
+// Fetch data from Google Sheets with sorting based on timestamp in column 0
 async function fetchData() {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
     const response = await fetch(url);
@@ -13,8 +13,17 @@ async function fetchData() {
         return [];
     }
     const data = await response.json();
-    console.log("Fetched data:", data.values); // Log fetched data
-    return data.values || [];
+    const rows = data.values || [];
+
+    // Sort data based on the timestamp in the first column (index 0)
+    rows.sort((a, b) => {
+        const timestampA = new Date(a[0]);
+        const timestampB = new Date(b[0]);
+        return timestampB - timestampA;  // Sort in descending order (latest first)
+    });
+
+    console.log("Fetched and sorted data:", rows); // Log sorted data
+    return rows;
 }
 
 // Format timestamp to "dd-mm-yyyy"
