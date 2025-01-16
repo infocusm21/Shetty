@@ -162,11 +162,12 @@ function displayProperties(data) {
     });
 }
 
-// Share property data details.images.join("\n\n")   
 function shareProperty(details) {
+    const imagePageUrl = "https://infocusm21.github.io/Shetty/view.html";
+
     const shareData = {
         title: "Property Details",
-        text: `Property Name:  ${details.propertyName}\nPrice:                     ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${details.images.join("\n\n")}\n\n`, 
+        text: `Property Name:  ${details.propertyName}\nPrice:                     ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: ${imagePageUrl}\n\n`, 
         url: window.location.href
     };
 
@@ -177,6 +178,7 @@ function shareProperty(details) {
         alert("Sharing is not supported on this browser.");
     }
 }
+
 
 // Initialize
 fetchData().then(data => displayProperties(data));
