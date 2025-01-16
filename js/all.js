@@ -162,7 +162,7 @@ function displayProperties(data) {
     });
 }
 
-// Share property data details.images.join("\n\n")   JSON.stringify(imageUrls)
+// Share property data details.images.join("\n\n")   
 function shareProperty(details) {
     const shareData = {
         title: "Property Details",

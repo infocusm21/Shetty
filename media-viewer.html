@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+        .grid-container {
+            display: grid;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+        img, video {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Media Viewer</h1>
+    <div class="grid-container" id="media-container"></div>
+
+    <script>
+        // Extract URLs from query parameters
+        const params = new URLSearchParams(window.location.search);
+        const urls = params.get("urls")?.split(",") || [];
+
+        // Display all images or videos
+        const container = document.getElementById("media-container");
+        urls.forEach((url) => {
+            const ext = url.split('.').pop().toLowerCase();
+            let element;
+            if (["mp4", "webm", "ogg"].includes(ext)) {
+                // Handle video files
+                element = document.createElement("video");
+                element.src = url;
+                element.controls = true;
+            } else {
+                // Handle image files
+                element = document.createElement("img");
+                element.src = url;
+                element.alt = "Media";
+            }
+            container.appendChild(element);
+        });
+    </script>
+</body>
+</html>
