@@ -166,7 +166,7 @@ function displayProperties(data) {
 function shareProperty(details) {
     const shareData = {
         title: "Property Details",
-        text: `Property Name: ${details.propertyName}\nPrice: ${details.price}\nAddress: ${details.address}\nSite Details: ${details.siteDetails}\nBroker Name: ${details.brokerName}\nContact: Nagaraja Sheety, 63621 87521\nImages: ${details.images.join(", ")}`,
+        text: `Property Name: ${details.propertyName}\nPrice: ${details.price}\nAddress: ${details.address}\nSite Details: ${details.siteDetails}\nBroker Name: ${details.brokerName}\nContact: Nagaraja Sheety, 63621 87521\nImages: \n${details.images.join("\n, \n")}`,
         url: details.mapAddress
     };
 
