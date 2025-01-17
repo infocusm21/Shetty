@@ -94,7 +94,7 @@ function displayProperties(data) {
     const sortedData = data.sort((a, b) => new Date(b[0]) - new Date(a[0]));
 
     // Filter rows by "50 L to 1 Crore" price range
-    const filteredData = sortedData.filter(row => row[6] && row[6].includes('1 to 2 Crore'));
+    const filteredData = sortedData.filter(row => row[6] && row[6].includes('50 L to  1 Crore'));
     console.log("Filtered data for '50 L to 1 Crore':", filteredData);
 
     if (filteredData.length === 0) {
