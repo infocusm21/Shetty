@@ -111,7 +111,6 @@ function displayProperties(data) {
             price: row[7],
             address: row[4],
             siteDetails: row[8],
-            
             images: imageUrls,
             files: fileUrls
         };
@@ -121,40 +120,58 @@ function displayProperties(data) {
         const propertyBox = document.createElement("div");
         propertyBox.classList.add("property-box", "col-12");
 
-        let currentImageIndex = 0;
-        const imageElement = document.createElement("img");
-        imageElement.src = imageUrls[0];
-        imageElement.style.pointerEvents = "none"; // Prevent pointer interactions
-        if (imageUrls.length > 1) {
-            setInterval(() => {
-                currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
-                imageElement.src = imageUrls[currentImageIndex];
-            }, 3000); // Auto-slide every 3 seconds
+        if (imageUrls.length > 0) {
+            let currentImageIndex = 0;
+            const imageElement = document.createElement("img");
+            imageElement.src = imageUrls[0];
+            imageElement.style.pointerEvents = "none"; // Prevent pointer interactions
+            if (imageUrls.length > 1) {
+                setInterval(() => {
+                    currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
+                    imageElement.src = imageUrls[currentImageIndex];
+                }, 3000); // Auto-slide every 3 seconds
+            }
+
+        
+            propertyBox.innerHTML = `
+                <div class="left-side"></div>
+                <div class="right-side">
+                    <h1 style="font-weight: bold; font-size: 35px;">${propertyDetails.propertyName}</h1>                
+                    <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 20px;">Price :</span><span class="value" style="font-weight: bold; font-size: 30px;">${propertyDetails.price}</span></div>
+                    <div class="detail-row"><span class="title">Address:</span><span class="value">${propertyDetails.address}</span></div>
+                    <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 15px;">Site Details:</span><span class="value" style="font-weight: normal; font-size: 22px;">${propertyDetails.siteDetails}</span></div>
+                    <div class="detail-row"><span class="title"><br>Contact:</br></span><span class="value"><br>Nagaraja Sheety </br>63621 87521</span></div>
+                    <div class="detail-row">
+                        <button class="btn btn-info" onclick='openImagePage(${JSON.stringify(imageUrls)})'>View Photos</button>
+                    </div>
+                    <div class="detail-row">
+                        <button class="btn btn-secondary" onclick='openAllFilesPage(${JSON.stringify(fileUrls)})'>View All Files</button>
+                    </div>
+                    <div class="detail-row">
+                        <button class="btn btn-success" onclick='shareProperty(${JSON.stringify(propertyDetails)})'>Share</button>
+                    </div>
+                </div>
+            `;
+            propertyBox.querySelector(".left-side").appendChild(imageElement);
+        } else {
+            propertyBox.innerHTML = `
+                <div class="right-side">
+                    <h1 style="font-weight: bold; font-size: 35px;">${propertyDetails.propertyName}</h1>                
+                    <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 20px;">Price :</span><span class="value" style="font-weight: bold; font-size: 30px;">${propertyDetails.price}</span></div>
+                    <div class="detail-row"><span class="title">Address:</span><span class="value">${propertyDetails.address}</span></div>
+                    <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 15px;">Site Details:</span><span class="value" style="font-weight: normal; font-size: 22px;">${propertyDetails.siteDetails}</span></div>
+                    <div class="detail-row"><span class="title"><br>Contact:</br></span><span class="value"><br>Nagaraja Sheety </br>63621 87521</span></div>
+                    <div class="detail-row"><span class="no-image-message" style="color: red;">No Photos / ಯಾವುದೇ ಫೋಟೋ ಇಲ್ಲ</span></div>
+                    <div class="detail-row">
+                        <button class="btn btn-secondary" onclick='openAllFilesPage(${JSON.stringify(fileUrls)})'>View All Files</button>
+                    </div>
+                    <div class="detail-row">
+                        <button class="btn btn-success" onclick='shareProperty(${JSON.stringify(propertyDetails)})'>Share</button>
+                    </div>
+                </div>
+            `;
         }
 
-        propertyBox.innerHTML = `
-            <div class="left-side"></div>
-            <div class="right-side">
-                <h1 style="font-weight: bold; font-size: 35px;">${propertyDetails.propertyName}</h1>                
-                <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 20px;">Price :</span><span class="value" style="font-weight: bold; font-size: 30px;">${propertyDetails.price}</span></div>
-                <div class="detail-row"><span class="title">Address:</span><span class="value">${propertyDetails.address}</span></div>
-                <div class="detail-row"><span class="title" style="font-weight: bold; font-size: 15px;">Site Details:</span><span class="value" style="font-weight: normal; font-size: 22px;">${propertyDetails.siteDetails}</span></div>
-                
-                <div class="detail-row"><span class="title"><br>Contact:</br></span><span class="value"><br>Nagaraja Shetty </br>63621 87521</span></div>
-                
-                <div class="detail-row">
-                    <button class="btn btn-info" onclick='openImagePage(${JSON.stringify(imageUrls)})'>View Photos</button>
-                </div>
-                <div class="detail-row">
-                    <button class="btn btn-secondary" onclick='openAllFilesPage(${JSON.stringify(fileUrls)})'>View All Files</button>
-                </div>
-                <div class="detail-row">
-                    <button class="btn btn-success" onclick='shareProperty(${JSON.stringify(propertyDetails)})'>Share</button>
-                </div>
-            </div>
-        `;
-
-        propertyBox.querySelector(".left-side").appendChild(imageElement);
         container.appendChild(propertyBox);
     });
 }
