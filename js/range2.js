@@ -175,46 +175,16 @@ function displayProperties(data) {
         container.appendChild(propertyBox);
     });
 }
+// Share property data
 function shareProperty(details) {
-    const imagesToShare = details.images.slice(0, 2); // Get the first two image URLs
+    const shareData = {
+        title: "Property Details",
+        text: `Property Name:   ${details.propertyName}\nPrice:                    ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${details.images.slice(0,2).join("\n\n ")}\n\n${details.mapAddress ? `View Map: ${details.mapAddress}\n` : ""}`,
+        url: window.location.href
+    };
 
-    // Convert image URLs to File objects
-    Promise.all(
-        imagesToShare.map(async (url) => {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`Failed to fetch image: ${url}`);
-                const blob = await response.blob();
-                const fileName = url.split('/').pop() || 'image.jpg'; // Use a default name if unavailable
-                return new File([blob], fileName, { type: blob.type });
-            } catch (error) {
-                console.error(`Error fetching image: ${url}`, error);
-                return null; // Handle fetch errors gracefully
-            }
-        })
-    )
-        .then((files) => {
-            const validFiles = files.filter((file) => file !== null); // Filter out any null results
-            if (navigator.canShare && navigator.canShare({ files: validFiles })) {
-                const shareData = {
-                    title: "Property Details",
-                    text: `Property Name:   ${details.propertyName}\nPrice:                    ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\nContact: Nagaraja Shetty, 63621 87521\n\n${details.mapAddress ? `View Map: ${details.mapAddress}\n` : ""}`,
-                    files: validFiles,
-                };
-
-                navigator
-                    .share(shareData)
-                    .then(() => console.log("Property shared successfully."))
-                    .catch((error) => console.log("Sharing failed:", error));
-            } else {
-                alert("Sharing files is not supported on this device or browser.");
-            }
-        })
-        .catch((error) => {
-            console.error("Failed to process images:", error);
-        });
+    navigator.share ? navigator.share(shareData).then(() => console.log("Property shared successfully.")).catch(error => console.log("Sharing failed:", error)) : alert("Sharing not supported in this browser.");
 }
-
 
 // Initialize app
 async function init() {
