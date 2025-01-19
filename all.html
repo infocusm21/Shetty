@@ -108,6 +108,19 @@
     }
 }
 
+h4 {
+  animation: blink 0.2s infinite alternate;
+}
+
+@keyframes blink {
+  from {
+    color: rgb(5, 5, 5);
+  }
+  to {
+    color: rgb(20, 50, 220);
+  }
+}
+
     </style>
 </head>
 <body>
@@ -148,7 +161,7 @@
                 <a href="all.html" class="price-box d-block">ALL</a>
             </div>
         </div>
-        <div><h4 class="text-center mb-4"><br>Latest - All Property List</br></h4></div></section>
+        <div><h4 class="text-center mb-4"><blink><br>👇 Latest - All Property List 👇</br></h4></blink></div></section>
     </section>
 
         <!-- Properties Container -->
