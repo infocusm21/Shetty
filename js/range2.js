@@ -180,7 +180,7 @@ function shareProperty(details) {
     const formattedImageLinks = details.images
         .map(imageUrl => {
             const fileId = getImageId(imageUrl);
-            return `https://drive.google.com/file/d/${fileId}/view`;
+            return `https://drive.google.com/file/d/${fileId}/preview`;
         })
         .slice(0, 2)
         .join("\n\n");
