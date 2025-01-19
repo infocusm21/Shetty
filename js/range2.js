@@ -177,13 +177,28 @@ function displayProperties(data) {
 }
 // Share property data
 function shareProperty(details) {
+    const formattedImageLinks = details.images
+        .map(imageUrl => {
+            const fileId = getImageId(imageUrl);
+            return `https://drive.google.com/file/d/${fileId}/view`;
+        })
+        .slice(0, 2)
+        .join("\n\n");
+
     const shareData = {
         title: "Property Details",
-        text: `Property Name:   ${details.propertyName}\nPrice:                    ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${details.images.slice(0,2).join("\n\n ")}\n\n${details.mapAddress ? `View Map: ${details.mapAddress}\n` : ""}`,
+        text: `Property Name:   ${details.propertyName}\nPrice:                    ${details.price}\nAddress:               ${details.address}\nSite Details:          ${details.siteDetails}\n\n\nContact: Nagaraja Shetty, 63621 87521 \n\nPhotos: \n${formattedImageLinks}\n\n${details.mapAddress ? `View Map: ${details.mapAddress}\n` : ""}`,
         url: window.location.href
     };
 
-    navigator.share ? navigator.share(shareData).then(() => console.log("Property shared successfully.")).catch(error => console.log("Sharing failed:", error)) : alert("Sharing not supported in this browser.");
+    if (navigator.share) {
+        navigator
+            .share(shareData)
+            .then(() => console.log("Property shared successfully."))
+            .catch(error => console.log("Sharing failed:", error));
+    } else {
+        alert("Sharing not supported in this browser.");
+    }
 }
 
 // Initialize app
